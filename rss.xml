@@ -23,10 +23,433 @@
         
             <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
         
-        <lastBuildDate>Sat, 05 Nov 2022 13:37:56 &#43;0800</lastBuildDate>
+        <lastBuildDate>Sat, 05 Nov 2022 14:00:21 &#43;0800</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://ghoooooost.com/rss.xml" />
         
+        
+            <item>
+                <title>About macOS</title>
+                <link>https://ghoooooost.com/posts/19_macos/</link>
+                <guid isPermaLink="true">https://ghoooooost.com/posts/19_macos/</guid>
+                <pubDate>Fri, 04 Nov 2022 22:36:00 &#43;0800</pubDate>
+                
+                    <author>872143263@qq.com (Ghost)</author>
+                
+                <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</copyright>
+                
+                    <description>&lt;h1 id=&#34;macos&#34;&gt;macOS&lt;/h1&gt;
+&lt;h2 id=&#34;ssh服务&#34;&gt;SSH服务&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;启动：sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;查看：sudo launchctl list &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep ssh
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;关闭：sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://ghoooooost.com/markdown_pic/19/bash_1.png&#34; alt=&#34;截屏2021-12-27 下午2.07.06&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;operation-not-permitted-问题&#34;&gt;Operation Not Permitted 问题&lt;/h2&gt;
+&lt;p&gt;多次在 Mac 使用过程中遇到 Operation Not Permitted 问题，之前都是略过，今天好好摸索了一把，搞明白了道理，记录下来。&lt;/p&gt;
+&lt;p&gt;好几次整理移动硬盘数据的时候，都遇到了 &lt;code&gt;Operation Not Permitted&lt;/code&gt; 问题，文件移动不了，也删除不掉，第一次遇到没理会，第二次是打开虚拟机，在 Windows 中操作这些问题文件，今天又遇到了，决定消灭它。&lt;/p&gt;
+&lt;p&gt;Apple 在 OS X 10.11 以后的版本中默认启动了一项系统保护程序，叫做 System Integrity Protection，也被唤作 rootless（寓意让 root 弱一点），该程序意在保护电脑不被恶意程序攻击，但是对于我们这群程序员，很多保护是多余的，甚至给我们带来了很多麻烦。&lt;/p&gt;
+&lt;p&gt;SIP 会锁定几个系统文件目录：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/System
+/sbin
+/usr （/usr/local 除外）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在 SIP 的保护下，部分软件、功能、脚本都会失效，我们可以通过如下步骤关闭 SIP：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;重启电脑，按下 &lt;code&gt;Command + R&lt;/code&gt; 直到听到开机声音，此时电脑会进入恢复模式（Recovery Mode）&lt;/li&gt;
+&lt;li&gt;当 OSX 工具出现在屏幕中时，下拉工具（Utilities）菜单，选择终端（Terminal）&lt;/li&gt;
+&lt;li&gt;键入 &lt;code&gt;csrutil disable&lt;/code&gt;，回车&lt;/li&gt;
+&lt;li&gt;电脑重启后，SIP 就关闭了&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;恢复 SIP 的方式同上，只不过终端中键入 &lt;code&gt;csrutil enable&lt;/code&gt;。通过 &lt;code&gt;csrutil status&lt;/code&gt; 可以检测系统当前 SIP 的启动状态：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ csrutil status
+System Integrity Protection status: enabled.
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;参考链接：https://www.barretlee.com/blog/2016/04/06/operation-not-permitted-problem-in-linux-or-unix-system/&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mac-终端后台运行命令的方法&#34;&gt;Mac 终端后台运行命令的方法&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;nohup&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;nohup ./test&amp;gt;file&amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用 括号 和  &amp;amp; ：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt; (./test &amp;gt;file &amp;amp;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;调试用到的命令：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ps -ef | grep print
+ps aux | grep test
+ps 1647
+kill -9 1695
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;参考链接：https://www.jianshu.com/p/47bd5bc724e5&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mac-无法打开调度中心&#34;&gt;Mac 无法打开调度中心&lt;/h2&gt;
+&lt;p&gt;终端输入：&lt;code&gt;killall Dock&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;scp-命令&#34;&gt;SCP 命令&lt;/h2&gt;
+&lt;p&gt;格式：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;scp &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;本地文件&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;user&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;@&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ip&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;:&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;远程路径&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;例如：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo scp /Users/ghost7/Downloads/***.wld root@8.***.***.***:/opt/Terraria/Worlds
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo scp /Users/ghost7/Desktop/douban.tar root@8.***.***.***:/root/docker_file
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;mac-解除端口占用&#34;&gt;Mac 解除端口占用&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;lsof -i:80		&lt;span class=&#34;c1&#34;&gt;# 查询80端口情况&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://ghoooooost.com/markdown_pic/19/image-20220501123011459.png&#34; alt=&#34;image-20220501123011459&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; 39070		&lt;span class=&#34;c1&#34;&gt;# 杀死该进程&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;mac配置环境变量&#34;&gt;Mac配置环境变量&lt;/h2&gt;
+&lt;h3 id=&#34;默认变量&#34;&gt;默认变量&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ghost7@bogon ~ % &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt;          
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/aria2/bin:/Library/Apple/usr/bin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;以配置mysql为例&#34;&gt;以配置Mysql为例&lt;/h3&gt;
+&lt;h4 id=&#34;环境变量&#34;&gt;环境变量&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vim ~/.bash_profile
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;加入 &lt;code&gt;PATH=$PATH:/usr/local/mysql/bin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;在命令行输入 &lt;code&gt;source ~/.bash_profile&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ghost7@bogon ~ % vim ~/.bash_profile
+ghost7@bogon ~ % source ~/.bash_profile 
+ghost7@bogon ~ % echo $PATH
+/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/aria2/bin:/Library/Apple/usr/bin:/usr/local/mysql/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;全局变量&#34;&gt;全局变量&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;创建一个文件：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo touch /etc/paths.d/mysql&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用 vim 打开这个文件（如果是以 open -t 的方式打开，则不允许编辑）：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo vim /etc/paths.d/mysql&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;编辑该文件，键入路径并保存（关闭该 Terminal 窗口并重新打开一个，就能使用 mysql 命令了）
+&lt;code&gt;/usr/local/mysql/bin&lt;/code&gt;
+据说，这样可以自己生成新的文件，不用把变量全都放到 paths 一个文件里，方便管理。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ghost7@bogon ~ % &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$PATH&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/aria2/bin:/usr/local/mysql/bin:/Library/Apple/usr/bin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;pmset-工具&#34;&gt;pmset 工具&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Power Manager Setting (pmset) 是 macOS 的系统级电池管理工具，通过调整 macOS 的睡眠计划，可以让Mac睡得更「好」，达到 「插电响应快，断电用得久」 的理想目标。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;休眠与睡眠&#34;&gt;休眠与睡眠&lt;/h3&gt;
+&lt;p&gt;休眠（sleep）：数据仍存放在内存中&lt;/p&gt;
+&lt;p&gt;睡眠（hibernate）:将内存数据存放到硬盘中，断开内存供电&lt;/p&gt;
+&lt;h3 id=&#34;pmset-命令&#34;&gt;pmset 命令&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo pmset &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;option&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;parameter&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;例&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pmset -g custom&lt;/code&gt; ：查看当前所有睡眠计划&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pmset -g cap&lt;/code&gt; ：查看当前供电条件下可以调节的参数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo pmset restoredefaults&lt;/code&gt; ：还原全部设置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;常用选项&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pmset -a&lt;/code&gt; ：调整任何条件下的睡眠计划&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pmset -c&lt;/code&gt; ：调整外部供电的睡眠计划&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pmset -b&lt;/code&gt; ：调整电池供电的睡眠计划&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pmset -g&lt;/code&gt; ：查看计划&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;常用参数&#34;&gt;常用参数&lt;/h3&gt;
+&lt;h4 id=&#34;sleep&#34;&gt;sleep&lt;/h4&gt;
+&lt;p&gt;控制进入休眠所需要的空闲时间&lt;/p&gt;
+&lt;h4 id=&#34;hibernatemode&#34;&gt;hibernatemode&lt;/h4&gt;
+&lt;p&gt;负责管理睡眠模式，值得注意的是，休眠时的内存镜像是否写入硬盘，除了受 &lt;code&gt;hibernatemode&lt;/code&gt; 的控制，还和 &lt;code&gt;standby&lt;/code&gt; 以及 &lt;code&gt;autopoweroff&lt;/code&gt; 的值有关。&lt;/p&gt;
+&lt;p&gt;有三种休眠模式可选：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;hibernatemode = 0&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;iMac, Mac Mini等 Mac桌面设备默认参数&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;持续向内存供电，将数据保留在内存&lt;/li&gt;
+&lt;li&gt;唤醒速度快，减少硬盘占用&lt;/li&gt;
+&lt;li&gt;数据有丢失风险&lt;/li&gt;
+&lt;li&gt;耗电量大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hibernatemode = 25&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;将数据写入硬盘&lt;/li&gt;
+&lt;li&gt;不向内存供电，将内存镜像直接写入硬盘&lt;/li&gt;
+&lt;li&gt;数据不易丢失，镜像占用硬盘空间&lt;/li&gt;
+&lt;li&gt;唤醒速度慢&lt;/li&gt;
+&lt;li&gt;耗电量少&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hibernatemode = 3&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;MacBook 笔记本设备默认参数&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;safe sleep, 数据既写入内存又写入硬盘&lt;/li&gt;
+&lt;li&gt;持续向内存供电&lt;/li&gt;
+&lt;li&gt;唤醒时，根据设备电量自动选择从 内存/硬盘 恢复&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;standy&#34;&gt;standy&lt;/h4&gt;
+&lt;p&gt;休眠是的计时器，满足时间条件后就会由「休眠」转至「睡眠」状态&lt;/p&gt;
+&lt;p&gt;需满足的条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;电池供电&lt;/li&gt;
+&lt;li&gt;无外接设备&lt;/li&gt;
+&lt;li&gt;无网络活动&lt;/li&gt;
+&lt;li&gt;无外接显示器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;满足条件的前提下， &lt;code&gt;standbydelayhigh/low&lt;/code&gt; 秒后，会进行睡眠。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;standbydelayhigh&lt;/code&gt; 与 &lt;code&gt;standbydelaylow&lt;/code&gt; 由阈值 &lt;code&gt;highstandbythreshold&lt;/code&gt; 进行控制。&lt;/p&gt;
+&lt;h4 id=&#34;highstandbythreshold&#34;&gt;highstandbythreshold&lt;/h4&gt;
+&lt;p&gt;电池剩余百分比，默认为50%。&lt;/p&gt;
+&lt;p&gt;高于阈值采用 &lt;code&gt;standbydelayhigh&lt;/code&gt; 计算时间。&lt;/p&gt;
+&lt;p&gt;低于阈值采用 &lt;code&gt;standbydelaylow&lt;/code&gt;  计算时间。&lt;/p&gt;
+&lt;h4 id=&#34;lidwake&#34;&gt;lidwake&lt;/h4&gt;
+&lt;p&gt;是否开盖唤醒&lt;/p&gt;
+&lt;h4 id=&#34;tcpkeepalive&#34;&gt;tcpkeepalive&lt;/h4&gt;
+&lt;p&gt;合盖时是否保持网络连接&lt;/p&gt;
+&lt;h4 id=&#34;displaysleep&#34;&gt;displaysleep&lt;/h4&gt;
+&lt;p&gt;屏幕休眠时间&lt;/p&gt;
+&lt;h4 id=&#34;disksleep&#34;&gt;disksleep&lt;/h4&gt;
+&lt;p&gt;硬盘休眠时间&lt;/p&gt;
+&lt;h4 id=&#34;acwake&#34;&gt;acwake&lt;/h4&gt;
+&lt;p&gt;被同一 iCloud ID 下的设备唤醒&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;参考链接：https://sspai.com/post/61379&lt;/p&gt;
+&lt;h2 id=&#34;mac-查询当前-dns-地址&#34;&gt;Mac 查询当前 DNS 地址&lt;/h2&gt;
+&lt;p&gt;终端输入：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /etc/resolv.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;mac-删除-ssh-缓存&#34;&gt;Mac 删除 SSH 缓存&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo ssh-keygen -R &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ip_address&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;mac上移动硬盘热插拔导致再次插入时不能装载的问题处理&#34;&gt;Mac上移动硬盘热插拔导致再次插入时不能装载的问题处理&lt;/h2&gt;
+&lt;p&gt;在Mac未推出移动硬盘或U盘的时候，直接拔掉，可能会导致再次插入Mac时在访达中不显示。打开 &lt;code&gt;磁盘工具&lt;/code&gt; 查看，也是不可用，显示 &lt;code&gt;未装载&lt;/code&gt;。这种情况很有可能是 &lt;code&gt;fsck&lt;/code&gt; 的问题，解决方案如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ps aux | grep fsck
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;sudo pkill -f fsck
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;拔掉移动硬盘，重新插入即可显示。&lt;/p&gt;
+&lt;p&gt;如果虽然显示了，但是无法写入，重启电脑就可以了。&lt;/p&gt;
+&lt;h2 id=&#34;mac-装载卸载硬盘&#34;&gt;Mac 装载、卸载硬盘&lt;/h2&gt;
+&lt;h3 id=&#34;查询列表&#34;&gt;查询列表&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;diskutil list
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;装载&#34;&gt;装载&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;diskutil mount &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;disk_num&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;卸载&#34;&gt;卸载&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;umount &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;disk_num&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;apple-watch-解锁-mac-无法打开&#34;&gt;apple watch 解锁 mac 无法打开&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在“钥匙串访问 app”里选“显示”--&amp;gt; “显示不可见项”；搜索“Auto Unlock”，全删；再搜索“AutoUnlock”（没空格的），全删（会自动生成 4 项）；&lt;/li&gt;
+&lt;li&gt;~/Library/Sharing/AutoUnlock/，删除里面的两个文件；&lt;/li&gt;
+&lt;li&gt;现在去打开 Apple Watch 解锁 Mac ，两次，第一次可能还会提示失败。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;mac-排查占用移动硬盘u盘的进程&#34;&gt;Mac 排查占用移动硬盘/U盘的进程&lt;/h2&gt;
+&lt;p&gt;列出正在占用该目录的进程&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo lsof /Volumes/&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;YourDevice&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后 &lt;code&gt;kill&lt;/code&gt; 掉即可&lt;/p&gt;
+&lt;h2 id=&#34;mac-spotlight-索引管理&#34;&gt;Mac Spotlight 索引管理&lt;/h2&gt;
+&lt;h3 id=&#34;mdutil-命令&#34;&gt;mdutil 命令&lt;/h3&gt;
+&lt;p&gt;所用的是 &lt;code&gt;mdutil&lt;/code&gt; 命令，查看帮助：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;man mdutil
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;em&gt;&lt;strong&gt;以下命令仅对单个目录生效，需要全局使用，只需加上 &lt;code&gt;-a&lt;/code&gt; 选项&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;开启关闭对指定目录的索引&#34;&gt;开启/关闭对指定目录的索引&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo mdutil -i on/off &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;volume_path&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;需要注意的是，关闭索引并不会清除之前已经建立的索引文件，即仍可以查询到之前建立的索引内容&lt;/p&gt;
+&lt;h3 id=&#34;重建索引&#34;&gt;重建索引&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo mdutil -E &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;volume_path&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在关闭该功能的状态下，只会添加“重建”的标记，当你再次打开时才会真正开始重建&lt;/p&gt;
+&lt;h3 id=&#34;查看某目录索引状态&#34;&gt;查看某目录索引状态&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo mdutil -s -v &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;volume_path&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+                
+                
+                
+                
+                
+                    
+                        
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/categories/%E6%8A%80%E6%9C%AF/">技术</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/categories/apple/">Apple</category>
+                                
+                            
+                        
+                    
+                        
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/tags/%E7%AC%94%E8%AE%B0/">笔记</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/tags/blog/">Blog</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/tags/apple/">Apple</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/tags/mac/">Mac</category>
+                                
+                            
+                        
+                    
+                
+            </item>
         
             <item>
                 <title>基于Hugo的博客搭建</title>
@@ -736,6 +1159,12 @@ I&#39;ll be glad to translate responses, if you only use one or the other.&lt;/p
                                     <category domain="https://ghoooooost.com/categories/%E5%81%9A%E4%BA%BA/">做人</category>
                                 
                             
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/categories/%E8%BD%AC%E8%BD%BD/">转载</category>
+                                
+                            
                         
                     
                         
@@ -856,6 +1285,20 @@ I&#39;ll be glad to translate responses, if you only use one or the other.&lt;/p
                 
                 
                     
+                        
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/categories/%E6%8A%80%E6%9C%AF/">技术</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://ghoooooost.com/categories/python/">Python</category>
+                                
+                            
                         
                     
                         
